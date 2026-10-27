@@ -16,6 +16,10 @@ class _DetailPageState extends State<DetailPage> {
     return !isFavorated;
   }
 
+  bool toggleIsSelected(bool isSelected) {
+    return !isSelected;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -57,20 +61,20 @@ class _DetailPageState extends State<DetailPage> {
                       color: Constants.primaryColor.withValues(alpha: 0.15),
                     ),
                     child: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            bool isFavorited = toggleFavorite(
-                                _plantList[widget.plantId].isFavorated
-                            );
-                            _plantList[widget.plantId].isFavorated = isFavorited;
-                          });
-                        },
-                        icon: Icon(
-                          _plantList[widget.plantId].isFavorated == true
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Constants.primaryColor,
-                        )
+                      onPressed: () {
+                        setState(() {
+                          bool isFavorited = toggleFavorite(
+                            _plantList[widget.plantId].isFavorated,
+                          );
+                          _plantList[widget.plantId].isFavorated = isFavorited;
+                        });
+                      },
+                      icon: Icon(
+                        _plantList[widget.plantId].isFavorated == true
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Constants.primaryColor,
+                      ),
                     ),
                   ),
                 ),
@@ -110,16 +114,18 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           PlantFeature(
                             title: 'Humidity',
-                            plantFeature: _plantList[widget.plantId].humidity.toString(),
+                            plantFeature: _plantList[widget.plantId].humidity
+                                .toString(),
                           ),
                           PlantFeature(
                             title: 'Temperature',
-                            plantFeature: _plantList[widget.plantId].temperature,
+                            plantFeature:
+                                _plantList[widget.plantId].temperature,
                           ),
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -137,7 +143,7 @@ class _DetailPageState extends State<DetailPage> {
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(30),
                   topLeft: Radius.circular(30),
-                )
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,13 +160,10 @@ class _DetailPageState extends State<DetailPage> {
                             style: TextStyle(
                               color: Constants.primaryColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: 30
+                              fontSize: 30,
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
-
-                          ),
+                          const SizedBox(height: 10),
                           Text(
                             r'$' + _plantList[widget.plantId].price.toString(),
                             style: TextStyle(
@@ -168,7 +171,7 @@ class _DetailPageState extends State<DetailPage> {
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
                         ],
                       ),
                       Row(
@@ -178,7 +181,6 @@ class _DetailPageState extends State<DetailPage> {
                             style: TextStyle(
                               fontSize: 30,
                               color: Constants.primaryColor,
-
                             ),
                           ),
                           Icon(
@@ -187,12 +189,10 @@ class _DetailPageState extends State<DetailPage> {
                             color: Constants.primaryColor,
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Expanded(
                     child: Text(
                       _plantList[widget.plantId].decription,
@@ -207,7 +207,7 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
       floatingActionButton: SizedBox(
@@ -219,7 +219,9 @@ class _DetailPageState extends State<DetailPage> {
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                color: Constants.primaryColor.withValues(alpha: 0.5),
+                color: _plantList[widget.plantId].isSelected == true
+                    ? Constants.primaryColor.withValues(alpha: 0.5)
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(50),
                 boxShadow: [
                   BoxShadow(
@@ -227,14 +229,26 @@ class _DetailPageState extends State<DetailPage> {
                     blurRadius: 5,
                     color: Constants.primaryColor.withValues(alpha: 0.3),
                   ),
-                ]
+                ],
               ),
-              child: const Icon(Icons.shopping_cart, color: Colors.white,),
-
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    bool isSelected = toggleIsSelected(
+                      _plantList[widget.plantId].isSelected,
+                    );
+                    _plantList[widget.plantId].isSelected = isSelected;
+                  });
+                },
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: _plantList[widget.plantId].isSelected == true
+                      ? Colors.white
+                      : Constants.primaryColor,
+                ),
+              ),
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            const SizedBox(width: 20),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -245,21 +259,17 @@ class _DetailPageState extends State<DetailPage> {
                       offset: const Offset(0, 1),
                       blurRadius: 5,
                       color: Constants.primaryColor.withValues(alpha: 0.3),
-
-                    )
-                  ]
+                    ),
+                  ],
                 ),
                 child: const Center(
                   child: Text(
                     'BUY NOW',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -270,8 +280,11 @@ class _DetailPageState extends State<DetailPage> {
 class PlantFeature extends StatelessWidget {
   final String plantFeature;
   final String title;
+
   const PlantFeature({
-    super.key, required this.plantFeature, required this.title,
+    super.key,
+    required this.plantFeature,
+    required this.title,
   });
 
   @override
@@ -279,20 +292,15 @@ class PlantFeature extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: Constants.blackColor,
-          ),
-        ),
+        Text(title, style: TextStyle(color: Constants.blackColor)),
         Text(
           plantFeature,
           style: TextStyle(
             color: Constants.primaryColor,
             fontSize: 18,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
           ),
-        )
+        ),
       ],
     );
   }
