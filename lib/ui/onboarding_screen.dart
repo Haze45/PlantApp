@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_app/ui/sign_in.dart';
+import 'package:plant_app/ui/screens/sign_in.dart';
 import 'package:plant_app/ui/root_page.dart';
 
 import '../constants.dart';
