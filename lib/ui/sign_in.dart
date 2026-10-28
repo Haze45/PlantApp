@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/ui/root_page.dart';
+import 'package:plant_app/ui/screens/signup.dart';
 import 'package:plant_app/ui/screens/widgets/custom_textField.dart';
 
 class SignIn extends StatelessWidget {
@@ -140,7 +141,41 @@ class SignIn extends StatelessWidget {
                   )
                 ],
               ),
-            )
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.bottomToTop,
+                    child: Signup(),
+                  ),
+                );
+              },
+              child: Center(
+                child: Text.rich(
+                    TextSpan(
+                        children: [
+                          TextSpan(
+                              text: 'New to Planty? ',
+                              style: TextStyle(
+                                color: Constants.blackColor,
+                              )
+                          ),
+                          TextSpan(
+                              text: 'Register',
+                              style: TextStyle(
+                                color: Constants.primaryColor,
+                              )
+                          ),
+                        ]
+                    )
+                ),
+              ),
+            ),
           ],
         ),
       ),
